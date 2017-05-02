@@ -10,7 +10,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-FROM debian:jessie
+FROM ppc64le/debian:jessie
 
 MAINTAINER Clemens Stolle klaemo@apache.org
 
@@ -63,6 +63,7 @@ ENV COUCHDB_VERSION 1.6.1
 # download dependencies, compile and install couchdb,
 # set correct permissions, expose couchdb to the outside and disable logging to disk
 RUN buildDeps=' \
+    automake \
     gcc \
     g++ \
     erlang-dev \
@@ -79,6 +80,7 @@ RUN buildDeps=' \
   && mkdir -p /usr/src/couchdb \
   && tar -xzf couchdb.tar.gz -C /usr/src/couchdb --strip-components=1 \
   && cd /usr/src/couchdb \
+  && cp /usr/share/automake-1.14/config.guess build-aux/config.guess \
   && ./configure --with-js-lib=/usr/lib --with-js-include=/usr/include/mozjs \
   && make && make install \
   && apt-get purge -y --auto-remove $buildDeps \
